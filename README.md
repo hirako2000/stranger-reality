@@ -11,10 +11,10 @@
 <br />
 <div align="center">
 
-  <h3 align="center">Personal Website</h3>
+  <h3 align="center">Stranger Reality</h3>
 
    <a href="https://stranger-reality.mtassoumt.uk">
-      <img src="images/logo.png" alt="screenshot" width="30%">
+      <img src="images/logo.png" alt="screenshot" width="50%">
    </a>
 
   <p align="center">
