@@ -326,7 +326,7 @@ import {
         setTimeout(() => {
             loadingOverlay.style.display = 'none'; // Hide the overlay after the transition
 			clicky();
-        }, 1000); // Match the duration of the CSS transition
+        }, 1000);
         audio.load(); // Load the audio in the main audio element
     });
 
