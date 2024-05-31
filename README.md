@@ -223,11 +223,11 @@ Don't forget to give the project a star! Thanks again!
 
 [![license][license-shield]][license-url]
 
-This work is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License][license-url].
+This work is licensed under the [MIT license][license-url].
 
 You may use and remix this content, but not for commercial use. Such as selling the templates and stuff like that.
 
-[license-url]: http://creativecommons.org/licenses/by-nc-sa/4.0/
+[license-url]: https://opensource.org/license/mit
 [cc-by-nc-sa-shield]: hhttps://img.shields.io/github/license/hirako2000/stranger-reality?style=for-the-badge
 
 If you too produce work and publish it out there, it's clearer to choose a [license](https://choosealicense.com).
