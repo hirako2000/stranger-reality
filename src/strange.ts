@@ -261,6 +261,7 @@ import {
 		tune.currentTime = ROOM_NUMBER - 2;
 		tune.volume = 0;
 		keepCalm(tune, 1);
+		tune.currentTime = ROOM_NUMBER - 2;
 		tune.play();
 	 	entered = true;
 	}
