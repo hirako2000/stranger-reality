@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "lint": "npx @biomejs/biome check --apply ./src",
-    "build": "vite build && cp src/static/site.webmanifest src/dist/",
+    "build": "vite build && cp src/static/site.webmanifest src/dist/ && cp _headers src/dist/ ",
     "test": "npm run lint"
   },
   "keywords": [
