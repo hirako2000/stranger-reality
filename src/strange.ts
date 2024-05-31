@@ -310,6 +310,32 @@ import {
   const swing = (p: number) => {
 	return 0.5 - Math.cos(p * Math.PI) / 2;
   }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const audio = document.getElementById('tune') as HTMLAudioElement;
+    const audioSource = document.getElementById('audioSource') as HTMLSourceElement;
+    const loadingOverlay = document.getElementById('loadingOverlay');
+
+    // Create a new audio element to preload the audio file
+    const preloader = new Audio();
+    preloader.src = audioSource.src;
+
+    preloader.addEventListener('canplaythrough', () => {
+        // The audio is fully loaded and can be played through without buffering
+        loadingOverlay.style.opacity = '0'; // Fade out the overlay
+        setTimeout(() => {
+            loadingOverlay.style.display = 'none'; // Hide the overlay after the transition
+        }, 1000); // Match the duration of the CSS transition
+        audio.load(); // Load the audio in the main audio element
+    });
+
+    preloader.addEventListener('error',  (e: Event) => {
+        console.error('Error loading audio:', e);
+        loadingOverlay.textContent = 'Failed to load audio.';
+    });
+});
   
   clicky();
+
+  
   
