@@ -1,6 +1,5 @@
 <!-- PROJECT SHIELDS -->
 
-[![Uptime][uptime-shield]][uptime-url]
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
