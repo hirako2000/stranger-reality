@@ -20,11 +20,17 @@ main {
   bottom: 0.625rem;
   opacity: 0;
   filter: invert(-1);
+  width: calc(100vw - 15rem);
+}
+
+#tune {
+  width: 100%;
 }
 
 @media only screen and (max-width: 768px) {
   .stranger-tune {
     bottom: 2.325rem;
+    width: calc(100vw - 2rem);
   }
 }
 
