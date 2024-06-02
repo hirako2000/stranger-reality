@@ -74,8 +74,13 @@ a:hover {
   transition: opacity 1s ease-out;
 }
 
+#vimeo-player {
+  display: none;
+}
 
-
+button {
+  cursor: pointer;
+}
 
 
 

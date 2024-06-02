@@ -16,9 +16,10 @@ import {
 	starSpeed?: number;
 	control?: boolean;
   }
-  
+
+  const { Player } = window.Vimeo;
+
   const ROOM_NUMBER = 1408;
-  
   
   class StarrySky {
 	private numberOfStars: number;
@@ -248,93 +249,115 @@ import {
   
   let entered = false;
   
-  const clicky = () => {
-	document.addEventListener('click', () => {
-	  okReveal();
-	});
+  const clicky = (player) => {
+	okRevealIt(player);
   }
-  
-  const okReveal = () => {
-	console.log("");
-	const tune = document.getElementById("tune") as HTMLAudioElement;
+
+
+  const rnd = () => {
+    const has = [
+		"John", "Mohammed", "Ali", "Chen", "Makoto", "Ahmed", "Mohammad", "Ravi", "Sophie", "Fernando", "Abdul", "Yuki", "Elena", "Lucas", "Aisha", "David", "Lina", "Eva", "Gabriel", "Javier", "Yusuf", "Mia", "Katja", "Johannes", "Cristina", "Sebastian", "Mariusz", "Anastasia", "Marko", "Juan", "Andrei", "Irina", "José", "Leila", "Jorge", "Olivia", "Amir", "Laura", "Emma", "Ana", "Katarina", "Andrzej", "Nadia", "Nils", "Marija", "Julia", "Antonio", "Hiroshi", "Arun", "Rosa", "Johan", "Elif", "Tomasz", "Maria", "Vladimir", "Emily", "Lena", "Sofia", "Giovanni", "Andreas", "Felipe", "Anusha", "Fátima", "Josef", "Hans", "Omar", "Giorgio", "Luis", "Aya", "Hassan", "Oleksandr", "Ali", "Josip", "Olga", "Juan", "Koji", "Sven", "Mehmet", "Michel", "Zhang", "Viktor", "Sarah", "Lars", "Choi", "Carlos", "Ivan", "Hafiz", "Leonardo", "Mohamed", "Amira", "Alex", "Masahiro", "Utku", "Fatima", "Konstantin", "Anton", "Igor", "Georgios", "Jie", "Alexei", "Abdullah", "Karolina", "Simone", "Mikael", "Yuri", "Olena", "Markus", "Pietro", "Viktoriya", "Vladislav", "Roman", "Prakash", "Petra", "Martina", "Monika", "Mateusz", "Kamal", "Siobhán", "Andrés", "Alexey", "Viktoria", "Meera", "Alessandro", "Vasilisa", "Dmitri", "Youssef", "Stanislav", "Jelena", "Ziad", "Oleksandra", "Alina", "Max", "Marta", "Róisín", "Théo", "Anastasia", "Olaf", "Maksym", "Nina", "Aleksei", "Nabil", "Valentina", "Tariq", "Timur", "Natalia", "Shams", "Bogdan", "Oksana", "Nikolay", "Sami", "Anastasiia", "Mikhail", "Alex", "Ekaterina", "Yaroslav", "Sergey", "Anna", "Alisa"
+	];
+    return has[Math.floor(Math.random() * has.length)];
+}
+
+  // biome-ignore lint/suspicious/noExplicitAny: there is no types for it ok?
+  const okRevealIt = (player: any) => {
 	if (!entered) {
-		tune.currentTime = ROOM_NUMBER - 2;
-		tune.volume = 0;
-		keepCalm(tune, 1);
-		tune.currentTime = ROOM_NUMBER - 2;
-		tune.play();
+		player.setCurrentTime(ROOM_NUMBER).then(() => player.play()).then(() => {
+			player.on('ended', () => {
+				player.setCurrentTime(ROOM_NUMBER).then(() => {
+					okRevealIt(player);
+				});
+			});
+		});
+		keepAllCalm(player, 1);
+		player.play();
 	 	entered = true;
+
+		console.log(`${rnd()}, reveal control`);
+		const duke = document.getElementById("duke");
+		duke.classList.add("revelation");
+	} else {
+		console.log(`${rnd()}, it's already revealed`);
 	}
-	const duke = document.getElementById("duke");
-	duke.classList.add("revelation");
   }
-  
-  const keepCalm = async (
-	element: HTMLMediaElement,
-	newVolume: number,
-	{
-		duration = 3000,
-		easing = swing,
-		interval = 13,
-	}: {
-		duration?: number,
-		easing?: typeof swing,
-		interval?: number,
-	} = {},
-  ): Promise<void> => {
-	const originalVolume = element.volume;
+
+  const keepAllCalm = async (
+	// biome-ignore lint/suspicious/noExplicitAny: no type, I told ya
+	player: any,
+    newVolume: number,
+    {
+        duration = 3000,
+        easing = swing,
+        interval = 13,
+    }: {
+        duration?: number,
+        easing?: typeof swing,
+        interval?: number,
+    } = {},
+): Promise<void> => {
+	console.info(`but ${rnd()}, this has to fade`);
+
+    const originalVolume = await player.setVolume(0);
 	const delta = newVolume - originalVolume;
+
+
+
+    const ticks = Math.floor(duration / interval);
+    let tick = 1;
+
+    return new Promise(resolve => {
+        const timer = setInterval(() => {
+			console.info(`${rnd()}, we set volume to ${originalVolume + easing(tick / ticks) * delta}`);
+        	 player.setVolume(originalVolume + (easing(tick / ticks) * delta));
+
+            if (++tick === ticks + 1) {
+                clearInterval(timer);
+                resolve();
+            }
+        }, interval);
+    });
+}
   
-	if (!delta || !duration || !easing || !interval) {
-		element.volume = newVolume;
-		return Promise.resolve();
-	}
-  
-	const ticks = Math.floor(duration / interval);
-	let tick = 1;
-  
-	return new Promise(resolve => {
-		const timer = setInterval(() => {
-			element.volume = originalVolume + (
-				easing(tick / ticks) * delta
-			);
-  
-			if (++tick === ticks + 1) {
-				clearInterval(timer);
-				resolve();
-			}
-		}, interval);
-	});
-  }
-  
-  const swing = (p: number) => {
+const swing = (p: number) => {
 	return 0.5 - Math.cos(p * Math.PI) / 2;
-  }
+}
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const audio = document.getElementById('tune') as HTMLAudioElement;
-    const audioSource = document.getElementById('audioSource') as HTMLSourceElement;
-    const loadingOverlay = document.getElementById('loadingOverlay');
+const setupVimeo = () => {
+	const options = {
+		id: 952597836,
+		width: 640
+	};
+	const player = new Player('vimeo-player', options);
+	
 
-    // Create a new audio element to preload the audio file
-    const preloader = new Audio();
-    preloader.src = audioSource.src;
+	// When the player is ready, set up event handlers
+	player.on('loaded', () => {
+		console.log(`${rnd()}, vimeo is loaded`);
+		const loadingOverlay = document.getElementById('loadingOverlay');	
+		loadingOverlay.style.opacity = '0';
+		setTimeout(() => {
+			loadingOverlay.style.display = 'none';
+		}, 1000);
 
-    preloader.addEventListener('canplaythrough', () => {
-        // The audio is fully loaded and can be played through without buffering
-        loadingOverlay.style.opacity = '0'; // Fade out the overlay
-        setTimeout(() => {
-            loadingOverlay.style.display = 'none'; // Hide the overlay after the transition
-			clicky();
-        }, 1000);
-        audio.load(); // Load the audio in the main audio element
-    });
+		document.addEventListener('click', () => {
+			clicky(player);
+		});
+	
+		document.getElementById('forward').addEventListener('click', () => {
+			player.getCurrentTime().then((seconds: number) => {
+				player.setCurrentTime(seconds + 10); // Move forward by 10 seconds
+			});
+		});
+	
+		document.getElementById('backward').addEventListener('click', () => {
+			player.getCurrentTime().then((seconds: number) => {
+				player.setCurrentTime(Math.max(seconds - 10, 0)); // Move backward by 10 seconds, but not before the start
+			});
+		});
+	}); 
+}
 
-    preloader.addEventListener('error',  (e: Event) => {
-        console.error('Error loading audio:', e);
-        loadingOverlay.textContent = 'Failed to load audio.';
-    });
-});
+setupVimeo();
 
-  
-  
