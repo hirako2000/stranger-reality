@@ -1,7 +1,7 @@
 {
   "name": "stranger-reality",
-  "version": "0.0.1",
-  "description": "some strange reality viz",
+  "version": "0.0.2",
+  "description": "Stranger Reality three.js audio viz",
   "main": "index.js",
   "scripts": {
     "dev": "vite",
